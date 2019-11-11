@@ -27,6 +27,7 @@ class ZeroR() :
         return [self.class_] * len(y_test)
 
     def score(self, x_test, y_test) :
+        x_test = np.array([x_test[:,0]]).T
         pred = self.predict(x_test, y_test)
         values = 0
         for i in range(len(pred)) :
@@ -43,5 +44,5 @@ params = [0, 1, 2, 3]
 best_params = []
 opt = 0
 
-classifier.fit(np.array([x_train[:,0]]).T, y_train)
-print(classifier.score(np.array([x_test[:,0]]).T, y_test))
+classifier.fit(x_train, y_train)
+print(classifier.score(x_test, y_test))

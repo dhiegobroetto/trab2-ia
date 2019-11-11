@@ -5,6 +5,7 @@ def warn (*args, **kargs) :
 warnings.warn = warn
 
 from sklearn import datasets
+import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import KBinsDiscretizer
 from collections import Counter
@@ -15,8 +16,15 @@ class OneR() :
 
     def fit(self, x_train, y_train) :
         # [0, 0, 1, 2] = 0
-        group_by = Counter(y_train)
-        self.class_ = max(group_by.items(), key = lambda x: x[1])[0]
+        for i in range(0, 3) :
+            predict = np.array([x_train[:,i]])
+            # predict = [p2 for p1 in predict.T for p2 in p1]
+            group_by = Counter(predict[0]).most_common(1)
+            # for value in (y_train) :
+                
+            # group_by = Counter(y_train)
+            print(group_by)
+        # self.class_ = max(group_by.items(), key = lambda x: x[1])[0]
     
     def predict(self, x_test, y_test) :
         return [self.class_] * len(y_test)
@@ -37,9 +45,8 @@ n_class = len(iris['target_names'])
 est = KBinsDiscretizer(n_bins=[n_class, n_class, n_class, n_class], encode='ordinal').fit(x_train)
 X_bin = est.transform(x_train)
 
-print(X_bin)
 
 oner = OneR()
 oner.fit(X_bin, y_train)
 
-equals = zip(oner.predict(x_test, y_test), y_test)
+# equals = zip(oner.predict(x_test, y_test), y_test)
