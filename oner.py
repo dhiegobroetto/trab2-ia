@@ -16,14 +16,25 @@ class OneR() :
 
     def fit(self, x_train, y_train) :
         # [0, 0, 1, 2] = 0
+        values = []
         for i in range(0, 3) :
-            predict = np.array([x_train[:,i]])
+            predict = np.array([x_train[:,i]])[0]
+            dict_values = {
+                            # class : {qty_val 0, qty_val 1, qty_val 2}
+                            0: {0 : 0, 1 : 0, 2 : 0},
+                            1: {0 : 0, 1 : 0, 2 : 0},
+                            2: {0 : 0, 1 : 0, 2 : 0}
+                        }
+            for x in range(len(x_train)) :
+                dict_values[y_train[x]][predict[x]] += 1
+            values.append(dict_values)
             # predict = [p2 for p1 in predict.T for p2 in p1]
-            group_by = Counter(predict[0]).most_common(1)
+            # group_by = Counter(predict[0])
             # for value in (y_train) :
                 
             # group_by = Counter(y_train)
-            print(group_by)
+        print(y_train)
+            # print(group_by)
         # self.class_ = max(group_by.items(), key = lambda x: x[1])[0]
     
     def predict(self, x_test, y_test) :
