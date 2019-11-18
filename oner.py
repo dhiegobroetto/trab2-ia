@@ -5,19 +5,18 @@ def warn (*args, **kargs) :
 warnings.warn = warn
 
 from sklearn import datasets
-from numpy import array
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import KBinsDiscretizer
 from sklearn.utils.multiclass import unique_labels
 from collections import Counter
 from pandas import crosstab
+from sklearn.base import BaseEstimator, ClassifierMixin
 
-class OneR() :
+class OneR(BaseEstimator, ClassifierMixin) :
     def __init__(self) :
         self.class_ = 0
 
     def fit(self, x_train, y_train) :
-        # n_class = array(x_train).shape[1]
         n_class = [len(unique_labels(y_train))] * len(x_train[0])
         est = KBinsDiscretizer(n_bins=n_class, encode='ordinal', strategy='uniform').fit(x_train)
         X_bin = est.transform(x_train)
@@ -45,9 +44,9 @@ class OneR() :
     def score(self, x_test, y_test) :
         pred = self.predict(x_test, y_test)
 
-        equals = zip(pred, y_train)
+        equals = zip(pred, y_test)
         equals = filter(lambda x: x[0] == x[1], equals)
-        return len(list(equals)) / len(list(y_train))
+        return len(list(equals)) / len(list(y_test))
         
 
     def best_index(self, row) :
@@ -79,14 +78,14 @@ class OneR() :
 
         return best_possible
 
-iris = datasets.load_iris()
-x_train, x_test, y_train, y_test = train_test_split(iris.data, iris.target, test_size = 0.4, random_state = 0)
+# iris = datasets.load_digits()
+# x_train, x_test, y_train, y_test = train_test_split(iris.data, iris.target, test_size = 0.4, random_state = 0)
 
-classifier = OneR()
+# classifier = OneR()
 
-params = [0, 1, 2, 3]
-best_params = []
-opt = 0
+# params = [0, 1, 2, 3]
+# best_params = []
+# opt = 0
 
-classifier.fit(x_train, y_train)
-print(classifier.score(x_test, y_test))
+# classifier.fit(x_train, y_train)
+# print(classifier.score(x_test, y_test))
