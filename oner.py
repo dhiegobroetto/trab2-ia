@@ -5,59 +5,88 @@ def warn (*args, **kargs) :
 warnings.warn = warn
 
 from sklearn import datasets
-import numpy as np
+from numpy import array
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import KBinsDiscretizer
+from sklearn.utils.multiclass import unique_labels
 from collections import Counter
+from pandas import crosstab
 
 class OneR() :
     def __init__(self) :
         self.class_ = 0
 
     def fit(self, x_train, y_train) :
-        # [0, 0, 1, 2] = 0
-        values = []
-        for i in range(0, 3) :
-            predict = np.array([x_train[:,i]])[0]
-            dict_values = {
-                            # class : {qty_val 0, qty_val 1, qty_val 2}
-                            0: {0 : 0, 1 : 0, 2 : 0},
-                            1: {0 : 0, 1 : 0, 2 : 0},
-                            2: {0 : 0, 1 : 0, 2 : 0}
-                        }
-            for x in range(len(x_train)) :
-                dict_values[y_train[x]][predict[x]] += 1
-            values.append(dict_values)
-            # predict = [p2 for p1 in predict.T for p2 in p1]
-            # group_by = Counter(predict[0])
-            # for value in (y_train) :
-                
-            # group_by = Counter(y_train)
-        print(y_train)
-            # print(group_by)
-        # self.class_ = max(group_by.items(), key = lambda x: x[1])[0]
+        # n_class = array(x_train).shape[1]
+        n_class = [len(unique_labels(y_train))] * len(x_train[0])
+        est = KBinsDiscretizer(n_bins=n_class, encode='ordinal', strategy='uniform').fit(x_train)
+        X_bin = est.transform(x_train)
+        possible_values = []
+        for i in range(0, len(x_train[0])) :
+            rules_values = dict()
+            cross_values = crosstab(X_bin[:,i], y_train)
+            for df_row_index, df_row in cross_values.iterrows() :
+                df_index = self.best_index(df_row)
+                df_name = cross_values.columns[df_index]
+                rules_values[df_row_index] = df_name
+            possible_values.append(rules_values)
+        self.predict_index = self.best_predict_index(X_bin, y_train, possible_values)
+        self.predict_table = possible_values[self.predict_index]
     
     def predict(self, x_test, y_test) :
-        return [self.class_] * len(y_test)
+        predict = list()
+        n_class = [len(unique_labels(y_test))] * len(x_test[0])
+        est = KBinsDiscretizer(n_bins=n_class, encode='ordinal', strategy='uniform').fit(x_test)
+        X_bin = est.transform(x_test)
+        for index in X_bin[:,self.predict_index] :
+            predict.append(self.predict_table[index])
+        return predict
 
-    # def score(self, x_test, y_test) :
-    #     pred = self.predict(x_test, y_test)
-    #     values = 0
-    #     for i in range(len(pred)) :
-    #         if pred[i] == y_test[i] :
-    #             values += 1
-    #     return values / len(pred)
+    def score(self, x_test, y_test) :
+        pred = self.predict(x_test, y_test)
+
+        equals = zip(pred, y_train)
+        equals = filter(lambda x: x[0] == x[1], equals)
+        return len(list(equals)) / len(list(y_train))
+        
+
+    def best_index(self, row) :
+        best_index = 0
+        max_value = 0
+
+        for index, element in enumerate(row) :
+            if element > max_value :
+                max_value = element
+                best_index = index
+
+        return best_index
+
+    def best_predict_index(self, x_train, y_train, possible_values) :
+        best_possible = 0
+        best_score = 0.0
+        for possible_index, possible in enumerate(possible_values) :
+            predict = list()
+            for index in x_train[:,possible_index] :
+                predict.append(possible[index])
+                
+            equals = zip(predict, y_train)
+            equals = filter(lambda x: x[0] == x[1], equals)
+            score = len(list(equals)) / len(list(y_train))
+
+            if score > best_score :
+                best_score = score
+                best_possible = possible_index
+
+        return best_possible
 
 iris = datasets.load_iris()
 x_train, x_test, y_train, y_test = train_test_split(iris.data, iris.target, test_size = 0.4, random_state = 0)
 
-n_class = len(iris['target_names'])
+classifier = OneR()
 
-est = KBinsDiscretizer(n_bins=[n_class, n_class, n_class, n_class], encode='ordinal').fit(x_train)
-X_bin = est.transform(x_train)
+params = [0, 1, 2, 3]
+best_params = []
+opt = 0
 
-
-oner = OneR()
-oner.fit(X_bin, y_train)
-
-# equals = zip(oner.predict(x_test, y_test), y_test)
+classifier.fit(x_train, y_train)
+print(classifier.score(x_test, y_test))
