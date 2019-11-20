@@ -11,23 +11,45 @@ from sklearn.utils.multiclass import unique_labels
 from collections import Counter
 from pandas import crosstab
 from sklearn.base import BaseEstimator, ClassifierMixin
+from scipy.spatial import distance
+from math import inf
 
 class Centroid(BaseEstimator, ClassifierMixin) :
     def __init__(self) :
-        self.class_ = 0
+        self.centroids = {}
 
     def fit(self, x_train, y_train) :
-        print(Counter(y_train))
-        val = 0
-        # val += x_train[0]
-        val += x_train[1]
-        print(val)
+        groups = Counter(y_train)
+        
+        # Soma todos os pontos
+        for i in range(0, len(x_train)) :
+            if y_train[i] not in self.centroids :
+                self.centroids[y_train[i]] = x_train[i]
+            else :    
+                self.centroids[y_train[i]] += x_train[i]
+
+        # Ponto médio
+        for index, value in self.centroids.items() :
+            self.centroids[index] = value / groups[index]
 
     def predict(self, x_test, y_test) :
-        pass
+        predict = []
+        for i in range(0, len(x_test)) :
+            best_index = 0
+            best_dist = inf
+            for index, value in self.centroids.items() :
+                dist = distance.euclidean(x_test[i], value)
+                if(dist <= best_dist) :
+                    best_index = index
+                    best_dist = dist
+            predict.append(best_index)
+        return predict
 
     def score(self, x_test, y_test) :
-        pass
+        pred = self.predict(x_test, y_test)
+        equals = zip(pred, y_test)
+        equals = filter(lambda x: x[0] == x[1], equals)
+        return len(list(equals)) / len(list(y_test))
 
 if __name__ == '__main__' :
     iris = datasets.load_digits()
@@ -36,5 +58,5 @@ if __name__ == '__main__' :
     classifier = Centroid()
     classifier.fit(x_train, y_train)
 
-    # print(f"Predict: {classifier.predict(x_test, y_test)}")
-    # print(f"Score: {classifier.score(x_test, y_test)}")
+    print(f"Predict: {classifier.predict(x_test, y_test)}")
+    print(f"Score: {classifier.score(x_test, y_test)}")

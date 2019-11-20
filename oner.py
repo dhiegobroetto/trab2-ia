@@ -43,7 +43,6 @@ class OneR(BaseEstimator, ClassifierMixin) :
 
     def score(self, x_test, y_test) :
         pred = self.predict(x_test, y_test)
-
         equals = zip(pred, y_test)
         equals = filter(lambda x: x[0] == x[1], equals)
         return len(list(equals)) / len(list(y_test))
