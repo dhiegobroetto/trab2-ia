@@ -41,7 +41,6 @@ classifiers['DTC'] = DecisionTreeClassifier()
 classifiers['MLPC'] = MLPClassifier()
 classifiers['RFC'] = RandomForestClassifier()
 
-
 params = {
     'KNN': {'n_neighbors': [1, 3, 5, 7, 10]},
     'DTC': {'max_depth': [None, 3, 5, 10]},
@@ -97,17 +96,29 @@ for classifier_name, classifier in classifiers.items() :
 # ------- Boxplots ------- #
 
 boxplot(data = box_iris, showmeans = True)
-title("Boxplot com scores de cada classificador na base Iris")
+title("Boxplot com scores de cada classificador no dataset Iris")
+xlabel('Classificadores')
+ylabel('Score')
 show()
+
 boxplot(data = box_digits, showmeans = True)
-title("Boxplot com scores de cada classificador na base Digits")
+title("Boxplot com scores de cada classificador no dataset Digits")
+xlabel('Classificadores')
+ylabel('Score')
 show()
+
 boxplot(data = box_wine, showmeans = True)
-title("Boxplot com scores de cada classificador na base Wine")
+title("Boxplot com scores de cada classificador no dataset Wine")
+xlabel('Classificadores')
+ylabel('Score')
 show()
+
 boxplot(data = box_breast_cancer, showmeans = True)
-title("Boxplot com scores de cada classificador na base Breast Cancer")
+title("Boxplot com scores de cada classificador no dataset Breast Cancer")
+xlabel('Classificadores')
+ylabel('Score')
 show()
+
 
 # ------- CSVs ------- #
 df_iris.drop(['score'], axis = 1).to_csv(f"results/iris_second_script.csv")
