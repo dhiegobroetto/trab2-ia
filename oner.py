@@ -78,14 +78,12 @@ class OneR(BaseEstimator, ClassifierMixin) :
 
         return best_possible
 
-# iris = datasets.load_digits()
-# x_train, x_test, y_train, y_test = train_test_split(iris.data, iris.target, test_size = 0.4, random_state = 0)
+if __name__ == '__main__' :
+    iris = datasets.load_digits()
+    x_train, x_test, y_train, y_test = train_test_split(iris.data, iris.target, test_size = 0.4, random_state = 0)
 
-# classifier = OneR()
+    classifier = OneR()
+    classifier.fit(x_train, y_train)
 
-# params = [0, 1, 2, 3]
-# best_params = []
-# opt = 0
-
-# classifier.fit(x_train, y_train)
-# print(classifier.score(x_test, y_test))
+    print(f"Predict: {classifier.predict(x_test, y_test)}")
+    print(f"Score: {classifier.score(x_test, y_test)}")

@@ -1,5 +1,5 @@
-from sklearn.exceptions import ConvergenceWarning
 from sklearn.utils.testing import ignore_warnings
+from sklearn.exceptions import ConvergenceWarning
 
 @ignore_warnings(category = ConvergenceWarning)
 
@@ -24,7 +24,7 @@ from sklearn import preprocessing
 
 from seaborn import boxplot
 import matplotlib.pyplot as plt
-from matplotlib.pyplot import show, title
+from matplotlib.pyplot import show, title, xlabel, ylabel
 
 # ------- Datasets ------- #
 
@@ -59,6 +59,7 @@ df_digits = DataFrame(index=classifiers.keys(), columns = ['media', 'dp', 'score
 df_wine = DataFrame(index=classifiers.keys(), columns = ['media', 'dp', 'score'])
 df_breast_cancer = DataFrame(index=classifiers.keys(), columns = ['media', 'dp', 'score'])
 
+# ------- Score from all classifiers for all datasets ------- #
 
 for classifier_index, classifier in classifiers.items() :
     gsCV = GridSearchCV(estimator = classifier, param_grid = params[classifier_index], scoring = 'accuracy', n_jobs = -1, cv = 4)
@@ -119,8 +120,8 @@ xlabel('Classificadores')
 ylabel('Score')
 show()
 
-
 # ------- CSVs ------- #
+
 df_iris.drop(['score'], axis = 1).to_csv(f"results/iris_second_script.csv")
 df_digits.drop(['score'], axis = 1).to_csv(f"results/digits_second_script.csv")
 df_wine.drop(['score'], axis = 1).to_csv(f"results/wine_second_script.csv")

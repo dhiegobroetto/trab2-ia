@@ -79,25 +79,29 @@ title("Boxplot com scores de cada classificador no dataset Iris")
 xlabel('Classificadores')
 ylabel('Score')
 show()
+
 boxplot(data = box_digits, showmeans = True)
 title("Boxplot com scores de cada classificador no dataset Digits")
 xlabel('Classificadores')
 ylabel('Score')
 show()
+
 boxplot(data = box_wine, showmeans = True)
 title("Boxplot com scores de cada classificador no dataset Wine")
 xlabel('Classificadores')
 ylabel('Score')
 show()
+
 boxplot(data = box_breast_cancer, showmeans = True)
 title("Boxplot com scores de cada classificador no dataset Breast Cancer")
 xlabel('Classificadores')
 ylabel('Score')
 show()
 
-# # ------- CSVs ------- #
-# df_iris.drop(['score'], axis = 1).to_csv(f"results/iris_first_script.csv")
-# df_digits.drop(['score'], axis = 1).to_csv(f"results/digits_first_script.csv")
-# df_wine.drop(['score'], axis = 1).to_csv(f"results/wine_first_script.csv")
-# df_breast_cancer.drop(['score'], axis = 1).to_csv(f"results/breast_cancer_first_script.csv")
+# ------- CSVs ------- #
+
+df_iris.drop(['score'], axis = 1).to_csv(f"results/iris_first_script.csv")
+df_digits.drop(['score'], axis = 1).to_csv(f"results/digits_first_script.csv")
+df_wine.drop(['score'], axis = 1).to_csv(f"results/wine_first_script.csv")
+df_breast_cancer.drop(['score'], axis = 1).to_csv(f"results/breast_cancer_first_script.csv")
 
