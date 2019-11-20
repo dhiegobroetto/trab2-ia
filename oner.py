@@ -72,7 +72,7 @@ class OneR(BaseEstimator, ClassifierMixin) :
             equals = filter(lambda x: x[0] == x[1], equals)
             score = len(list(equals)) / len(list(y_train))
 
-            if score > best_score :
+            if score >= best_score :
                 best_score = score
                 best_possible = possible_index
 
