@@ -7,9 +7,11 @@ warnings.warn = warn
 from pandas import DataFrame
 from collections import Counter
 import os
+from numpy import mean, std 
 
 from zeror import ZeroR
 from oner import OneR
+from centroid import Centroid
 from sklearn.naive_bayes import GaussianNB
 
 from sklearn import datasets
@@ -33,6 +35,7 @@ ds_breast_cancer = datasets.load_breast_cancer()
 classifiers = dict()
 classifiers['ZeroR'] =  ZeroR()
 classifiers['OneR'] = OneR()
+classifiers['Centroid'] = Centroid()
 classifiers['GaussianNB'] = GaussianNB()
 
 # ------- DataFrames with Media / DP / Score ------- #
@@ -45,17 +48,17 @@ df_breast_cancer = DataFrame(index = classifiers.keys(), columns = ['media', 'dp
 # ------- Score from all classifiers for all datasets ------- #
 
 for classifier_index, classifier in classifiers.items() :
-    score = cross_val_score(estimator = classifier, X = ds_iris.data, y = ds_iris.target, cv = 10)
-    df_iris.loc[classifier_index] = [score.mean(), score.std(), score]
+    score = cross_val_score(estimator = classifier, X = ds_iris.data, y = ds_iris.target, scoring='accuracy', cv = 10)
+    df_iris.loc[classifier_index] = [mean(score), std(score), score]
 
-    score = cross_val_score(estimator = classifier, X = ds_digits.data, y = ds_digits.target, cv = 10)
-    df_digits.loc[classifier_index] = [score.mean(), score.std(), score]
+    score = cross_val_score(estimator = classifier, X = ds_digits.data, y = ds_digits.target, scoring='accuracy', cv = 10)
+    df_digits.loc[classifier_index] = [mean(score), std(score), score]
 
-    score = cross_val_score(estimator = classifier, X = ds_wine.data, y = ds_wine.target, cv = 10)
-    df_wine.loc[classifier_index] = [score.mean(), score.std(), score]
+    score = cross_val_score(estimator = classifier, X = ds_wine.data, y = ds_wine.target, scoring='accuracy', cv = 10)
+    df_wine.loc[classifier_index] = [mean(score), std(score), score]
 
-    score = cross_val_score(estimator = classifier, X = ds_breast_cancer.data, y = ds_breast_cancer.target, cv = 10)
-    df_breast_cancer.loc[classifier_index] = [score.mean(), score.std(), score]
+    score = cross_val_score(estimator = classifier, X = ds_breast_cancer.data, y = ds_breast_cancer.target, scoring='accuracy', cv = 10)
+    df_breast_cancer.loc[classifier_index] = [mean(score), std(score), score]
 
 # ------- Initiate boxplot dataframes ------- #
 

@@ -17,6 +17,8 @@ class OneR(BaseEstimator, ClassifierMixin) :
         self.class_ = 0
 
     def fit(self, x_train, y_train) :
+        self.class_ = unique_labels(y_train)
+        
         n_class = [len(unique_labels(y_train))] * len(x_train[0])
         est = KBinsDiscretizer(n_bins=n_class, encode='ordinal', strategy='uniform').fit(x_train)
         X_bin = est.transform(x_train)
@@ -32,9 +34,9 @@ class OneR(BaseEstimator, ClassifierMixin) :
         self.predict_index = self.best_predict_index(X_bin, y_train, possible_values)
         self.predict_table = possible_values[self.predict_index]
     
-    def predict(self, x_test, y_test) :
+    def predict(self, x_test) :
         predict = list()
-        n_class = [len(unique_labels(y_test))] * len(x_test[0])
+        n_class = [len(self.class_)] * len(x_test[0])
         est = KBinsDiscretizer(n_bins=n_class, encode='ordinal', strategy='uniform').fit(x_test)
         X_bin = est.transform(x_test)
         for index in X_bin[:,self.predict_index] :
@@ -42,7 +44,7 @@ class OneR(BaseEstimator, ClassifierMixin) :
         return predict
 
     def score(self, x_test, y_test) :
-        pred = self.predict(x_test, y_test)
+        pred = self.predict(x_test)
         equals = zip(pred, y_test)
         equals = filter(lambda x: x[0] == x[1], equals)
         return len(list(equals)) / len(list(y_test))
@@ -84,5 +86,5 @@ if __name__ == '__main__' :
     classifier = OneR()
     classifier.fit(x_train, y_train)
 
-    print(f"Predict: {classifier.predict(x_test, y_test)}")
+    print(f"Predict: {classifier.predict(x_test)}")
     print(f"Score: {classifier.score(x_test, y_test)}")

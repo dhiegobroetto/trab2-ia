@@ -18,17 +18,16 @@ class ZeroR(BaseEstimator, ClassifierMixin) :
         self.class_ = 0
 
     def fit(self, x_train, y_train) :
-        # [0, 0, 1, 2] = 0
         group_by = Counter(y_train)
         group = max(group_by.items(), key = lambda x: x[1])[0]
         self.class_ = group
     
-    def predict(self, x_test, y_test) :
-        return [self.class_] * len(y_test)
+    def predict(self, x_test) :
+        return [self.class_] * len(x_test)
 
     def score(self, x_test, y_test) :
         x_test = np.array([x_test[:,0]]).T
-        pred = self.predict(x_test, y_test)
+        pred = self.predict(x_test)
         values = 0
         for i in range(len(pred)) :
             if pred[i] == y_test[i] :
@@ -42,5 +41,5 @@ if __name__ == '__main__' :
     classifier = ZeroR()
     classifier.fit(x_train, y_train)
     
-    print(f"Predict: {classifier.predict(x_test, y_test)}")
+    print(f"Predict: {classifier.predict(x_test)}")
     print(f"Score: {classifier.score(x_test, y_test)}")

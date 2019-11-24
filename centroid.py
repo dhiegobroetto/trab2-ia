@@ -32,7 +32,7 @@ class Centroid(BaseEstimator, ClassifierMixin) :
         for index, value in self.centroids.items() :
             self.centroids[index] = value / groups[index]
 
-    def predict(self, x_test, y_test) :
+    def predict(self, x_test) :
         predict = []
         for i in range(0, len(x_test)) :
             best_index = 0
@@ -46,7 +46,7 @@ class Centroid(BaseEstimator, ClassifierMixin) :
         return predict
 
     def score(self, x_test, y_test) :
-        pred = self.predict(x_test, y_test)
+        pred = self.predict(x_test)
         equals = zip(pred, y_test)
         equals = filter(lambda x: x[0] == x[1], equals)
         return len(list(equals)) / len(list(y_test))
@@ -58,5 +58,5 @@ if __name__ == '__main__' :
     classifier = Centroid()
     classifier.fit(x_train, y_train)
 
-    print(f"Predict: {classifier.predict(x_test, y_test)}")
+    print(f"Predict: {classifier.predict(x_test)}")
     print(f"Score: {classifier.score(x_test, y_test)}")
