@@ -111,5 +111,5 @@ if __name__ == '__main__' :
     classifier = CentroidOneR()
     classifier.fit(x_train, y_train)
 
-    # print(f"Predict: {classifier.predict(x_test)}")
+    print(f"Predict: {classifier.predict(x_test)}")
     print(f"Score: {classifier.score(x_test, y_test)}")
