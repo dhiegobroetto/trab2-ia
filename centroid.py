@@ -10,9 +10,9 @@ from sklearn.preprocessing import KBinsDiscretizer
 from sklearn.utils.multiclass import unique_labels
 from collections import Counter
 from pandas import crosstab
-from sklearn.base import BaseEstimator, ClassifierMixin
 from scipy.spatial import distance
 from math import inf
+from sklearn.base import BaseEstimator, ClassifierMixin
 
 class Centroid(BaseEstimator, ClassifierMixin) :
     def __init__(self) :

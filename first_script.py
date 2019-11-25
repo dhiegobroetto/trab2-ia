@@ -11,7 +11,9 @@ from numpy import mean, std
 
 from zeror import ZeroR
 from oner import OneR
+from probabilistic_oner import ProbabilisticOneR
 from centroid import Centroid
+from centroid_oner import CentroidOneR
 from sklearn.naive_bayes import GaussianNB
 
 from sklearn import datasets
@@ -35,7 +37,9 @@ ds_breast_cancer = datasets.load_breast_cancer()
 classifiers = dict()
 classifiers['ZeroR'] =  ZeroR()
 classifiers['OneR'] = OneR()
+classifiers['ProbOneR'] = ProbabilisticOneR()
 classifiers['Centroid'] = Centroid()
+classifiers['CentOneR'] = CentroidOneR()
 classifiers['GaussianNB'] = GaussianNB()
 
 # ------- DataFrames with Media / DP / Score ------- #
@@ -101,10 +105,10 @@ xlabel('Classificadores')
 ylabel('Score')
 show()
 
-# ------- CSVs ------- #
+# # ------- CSVs ------- #
 
-df_iris.drop(['score'], axis = 1).to_csv(f"results/iris_first_script.csv")
-df_digits.drop(['score'], axis = 1).to_csv(f"results/digits_first_script.csv")
-df_wine.drop(['score'], axis = 1).to_csv(f"results/wine_first_script.csv")
-df_breast_cancer.drop(['score'], axis = 1).to_csv(f"results/breast_cancer_first_script.csv")
+# df_iris.drop(['score'], axis = 1).to_csv(f"results/iris_first_script.csv")
+# df_digits.drop(['score'], axis = 1).to_csv(f"results/digits_first_script.csv")
+# df_wine.drop(['score'], axis = 1).to_csv(f"results/wine_first_script.csv")
+# df_breast_cancer.drop(['score'], axis = 1).to_csv(f"results/breast_cancer_first_script.csv")
 
